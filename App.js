@@ -8,54 +8,63 @@ import MainStack from "./navigations/MainStack";
 import { Provider } from "react-redux";
 import configureStore from "./redux/store/configureStore";
 import messaging from "@react-native-firebase/messaging";
-import { AppState } from "react-native";
 import { saveUserDataToSharedStorage, getQuoteOfToday } from "./utils/SharedPreferences";
-import { navigationRef, navigate } from './navigations/helper';
+import { navigationRef } from './navigations/helper';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import moment from "moment";
+import axios from "axios";
 
 const store = configureStore();
 const Stack = createStackNavigator();
 
-async function requestUserPermission() {
-    const authorizationStatus = await messaging().requestPermission();
-
-    if (authorizationStatus) {
-        console.log('Permission status:', authorizationStatus);
+async function updateWidget(){
+    const quote = await getQuoteOfToday();
+    const widgetData = {
+        title: quote.title,
+        meaning: quote.quote
     }
+    await saveUserDataToSharedStorage(widgetData);
+}
+
+async function pushNotification(){
+    var storageData = await AsyncStorage.getItem("user_data");
+    const u = JSON.parse(storageData);
+    if(u.reminder != null){
+        const now = moment();
+        const date = now.clone().format("YYYY-MM-DD");
+        const reminder = moment(`${date} ${u.reminder}`).utc();
+        var duration = moment.duration(now.diff(reminder));
+        const diff_mins = duration.asMinutes();
+        if(diff_mins > 0 && diff_mins < 5){
+            axios({
+                method: "POST",
+                url: "https://us-central1-ctr-daily.cloudfunctions.net/sendReminder",
+                data: {
+                    uid: u.uid,
+                }
+            })
+        }
+    }
+
 }
 
 class App extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            appState : AppState.currentState
-        };
     }
 
     async componentDidMount() {
-        await requestUserPermission()
         messaging().onMessage(async remoteMessage => {
-            const quote = await getQuoteOfToday();
-            const widgetData = {
-                title: quote.title,
-                meaning: quote.quote
-            }
-            await saveUserDataToSharedStorage(widgetData);
+            console.log("Remote message arrived:", remoteMessage);
+            const { data } = remoteMessage;
+            await updateWidget();
+            if(data.type == "5mins"){
+                pushNotification();
+            } 
         });
-        AppState.addEventListener("change", this._handleAppStateChange);
+
+        await updateWidget();
     }
-
-    _handleAppStateChange = nextAppState => {
-        if (this.state.appState.match(/inactive|background/) && nextAppState === "active") 
-        {
-            navigate("Main", { screen : "Home" });
-        }
-        this.setState({ appState : nextAppState })
-    };
-
-    componentWillUnmount() {
-        AppState.removeEventListener("change", this._handleAppStateChange);
-    }
-
 
     render() {
         return (

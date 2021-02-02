@@ -8,21 +8,33 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment-timezone';
 import { load_user_data } from "../../redux/actions/UserActions";
 import firestore from "@react-native-firebase/firestore";
+import Loading from "../Loading";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class SetReminder extends Component {
     constructor(props) {
         super(props);
         this.state = {
             showDatePickerModal : false,
-            reminderTime : "10:00"
+            reminderTime : "10:00",
+            loading  : false 
         };
     }
     _onPressContinue = async () => {
+        this.setState({ loading : true });
         // Store reminder time.
         await firestore().collection("users").doc(this.props.user.uid).update({"reminder" : this.state.reminderTime });
         // Set user State
         const { setReminder } = this.props;
         setReminder({ reminder : this.state.reminderTime });
+
+        const data = {
+            uid : this.props.user.uid,
+            reminder : this.state.reminderTime
+        }
+        await AsyncStorage.setItem("user_data", JSON.stringify(data));
+
+        this.setState({ loading : false });
         this.props.navigation.navigate("Main", { screen : "Home"});
     }
 
@@ -70,6 +82,7 @@ class SetReminder extends Component {
                     onCancel={this.hideDatePicker}
                     locale="en_GB" // Use "en_GB" here
                 />
+                { this.state.loading && <Loading />}
             </ImageBackground>
         );
     }

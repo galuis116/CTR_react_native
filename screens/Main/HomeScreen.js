@@ -24,16 +24,11 @@ import dayjs from "dayjs";
 import ViewShot from "react-native-view-shot";
 import CameraRoll from "@react-native-community/cameraroll";
 import firestore from "@react-native-firebase/firestore";
-import axios from "axios"
-import moment from "moment-timezone";
-import BackgroundFetch from "react-native-background-fetch";
-
 import { months } from "../../data/basic";
 import { load_user_data } from '../../redux/actions/UserActions';
 import { showToast } from "../../utils";
 import CalendarModal from "../../components/CalendarModal";
 import Loading from "../Loading";
-import { saveUserDataToSharedStorage, dealWithPermissions } from "../../utils/SharedPreferences";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -54,7 +49,8 @@ class HomeScreen extends Component {
             currentDate: today,
             favorited: false,
             showCalendar: false,
-            loading: false
+            loading: false,
+            appState : AppState.currentState
         };
         this._unsubscribe = null;
     }
@@ -160,72 +156,18 @@ class HomeScreen extends Component {
                 return null;
             })
         }
-
-        BackgroundFetch.configure({
-            minimumFetchInterval: 15,    
-            forceAlarmManager: true,     
-            stopOnTerminate: false,
-            startOnBoot: true,
-            requiredNetworkType: BackgroundFetch.NETWORK_TYPE_NONE, 
-            requiresCharging: false,     
-            requiresDeviceIdle: false,   
-            requiresBatteryNotLow: false,
-            requiresStorageNotLow: false,
-            enableHeadless: true,
-        }, async (taskId) => {
-            const now = moment();
-            const date = now.clone().format("YYYY-MM-DD");
-            const reminder = moment(`${date} ${this.props.user.reminder}`).utc();
-            var duration = moment.duration(now.diff(reminder));
-            const diff_mins = duration.asMinutes();
-
-            if(diff_mins > 0 && diff_mins < 15){
-                axios({
-                    method: "POST",
-                    url: "https://us-central1-ctr-daily.cloudfunctions.net/sendReminder",
-                    data: {
-                        uid: this.props.user.uid,
-                    }
-                })
-            }
-            console.log("Background job worked : ", taskId);
-            BackgroundFetch.finish(taskId);
-        },
-            (error) => {
-                console.log("Background Error: ", error);
-            }
-        );
-
-        // Optional: Query the authorization status.
-        BackgroundFetch.status((status) => {
-            switch (status) {
-                case BackgroundFetch.STATUS_RESTRICTED:
-                    console.log("BackgroundFetch restricted");
-                    break;
-                case BackgroundFetch.STATUS_DENIED:
-                    console.log("BackgroundFetch denied");
-                    break;
-                case BackgroundFetch.STATUS_AVAILABLE:
-                    console.log("BackgroundFetch is enabled");
-                    break;
-            }
-        });
-
-        // Android Back Button Event
-        BackHandler.addEventListener(
-            "hardwareBackPress",
-            this.backAction
-        )
-
-        // Widget Quote Data
-        const widgetData = {
-            title : this.props.user.quote.title,
-            meaning : this.props.user.quote.quote
-        }
         
-        await saveUserDataToSharedStorage(widgetData);
-
+        AppState.addEventListener("change", this._handleAppStateChange);
     }
+
+    _handleAppStateChange = nextAppState => {
+        if (this.state.appState.match(/inactive|background/) && nextAppState === "active") {
+
+            this.props.navigation.navigate("Main", { screen : "Home" });
+            this.onChangeDate(dayjs())
+        }
+        this.setState({ appState : nextAppState })
+    };
 
     backAction = () => {
         return this.props.route.name == "Home"
@@ -233,6 +175,8 @@ class HomeScreen extends Component {
     componentWillUnmount() {
         if (this._unsubscribe) this._unsubscribe();
         BackHandler.removeEventListener("hardwareBackPress", this.backAction);
+        AppState.removeEventListener("change", this._handleAppStateChange);
+
     }
     render() {
         const { navigation } = this.props;

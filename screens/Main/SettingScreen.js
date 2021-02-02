@@ -17,7 +17,7 @@ class SettingScreen extends Component {
         await Linking.openURL("https://ctrdailyapp.com/contact-us");
     }
     rateUs = async () => {
-        const link = Platform.OS == "ios" ? "itms-apps://itunes.apple.com/us/app/id1235742891?mt=8" : "http://play.google.com/store/apps/details?id=com.google.android.apps.maps";
+        const link = Platform.OS == "ios" ? "itms-apps://itunes.apple.com/us/app/id1546250687?mt=8" : "http://play.google.com/store/apps/details?id=com.ctrdaily.ctrdaily";
         await Linking.openURL(link);
     }
     onPressShareWithFriends = async () => {

@@ -43,12 +43,14 @@ struct Provider: TimelineProvider {
           print(error)
         }
       }
-
-      let entry = SimpleEntry(date: Date(),  title : title, meaning: meaning)
-      
-      let nextTime = Calendar.current.date(byAdding: .minute, value: 5, to: Date())!
-      let timeline = Timeline(entries: [entry], policy: .after(nextTime))
-      completion(timeline)
+    
+      if(title != "" && meaning != ""){
+        let now = Date();
+        let entry = SimpleEntry(date: now,  title : title, meaning: meaning)
+        let timeline = Timeline(entries: [entry], policy: .atEnd)
+        completion(timeline)
+      }
+     
     }
 }
 

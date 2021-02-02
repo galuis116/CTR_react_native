@@ -7,8 +7,10 @@ const { onChangeGoogleSubscription } = require('./scripts/onChangeGoogleSubscrip
 const { onChangeAppleSubscription } = require("./scripts/onChangeAppleSubscription");
 const { onEveryDay } = require("./scripts/onEveryDay");
 const { sendReminder } = require("./scripts/sendReminder");
+const { onEvery5Mins} = require("./scripts/onEvery5Mins");
 
 exports.onChangeGoogleSubscription = onChangeGoogleSubscription;
 exports.onChangeAppleSubscription = onChangeAppleSubscription;
 exports.onEveryDay = onEveryDay;
 exports.sendReminder = sendReminder;
+exports.onEvery5Mins = onEvery5Mins;

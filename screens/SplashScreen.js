@@ -4,7 +4,6 @@ import FastImage from "react-native-fast-image";
 import { isIphoneX } from 'react-native-iphone-x-helper';
 import { getUniqueId } from 'react-native-device-info';
 import firestore from "@react-native-firebase/firestore";
-import auth from "@react-native-firebase/auth";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from "react-redux";
 import messaging from '@react-native-firebase/messaging';
@@ -15,10 +14,19 @@ import Android from "../assets/images/splash-android.jpg";
 import { months } from "../data/basic";
 import dayjs from "dayjs";
 import WelcomeModal from "../components/WelcomeModal";
+import { saveUserDataToSharedStorage } from "../utils/SharedPreferences";
+import auth from "@react-native-firebase/auth";
 
 var splash = IphoneX;
 if (Platform.OS == "android") splash = Android;
 else splash = isIphoneX() ? IphoneX : Iphone6;
+
+async function requestUserPermission() {
+    const authorizationStatus = await messaging().requestPermission();
+    if (authorizationStatus) {
+        console.log('Permission status:', authorizationStatus);
+    }
+}
 
 class SplashScreen extends Component {
     constructor(props) {
@@ -30,7 +38,6 @@ class SplashScreen extends Component {
     }
 
     createUser = async (uid) => {
-        const pushToken = await messaging().getToken();
         const user = {
             deviceId: uid,
             trial_days: 14,
@@ -59,13 +66,10 @@ class SplashScreen extends Component {
             showWelcome: true,
             viewed_quotes: [],
             membership_status: "active",
-            pushToken: [pushToken]
+            pushToken: []
         }
-        return new Promise((resolve, reject) => {
-            firestore().collection("users").doc(uid).set(user)
-                .then(() => { resolve(user); })
-                .catch(e => { reject(e); })
-        })
+        firestore().collection("users").doc(uid).set(user);
+        return user;
     }
 
     checkUserSetting = async (uid) => {
@@ -74,7 +78,8 @@ class SplashScreen extends Component {
             try {
                 const user = await this.createUser(uid);
                 const user_data = {
-                    uid: uid
+                    uid: uid,
+                    reminder : user.reminder
                 }
                 await AsyncStorage.setItem("user_data", JSON.stringify(user_data));
                 return user;
@@ -89,14 +94,11 @@ class SplashScreen extends Component {
             if (!user) {
                 user = await this.createUser(uid);
                 const user_data = {
-                    uid: user.uid
+                    uid: user.uid,
+                    reminder : user.reminder
                 }
                 await AsyncStorage.setItem("user_data", JSON.stringify(user_data));
-            } else {
-                const pushToken = await messaging().getToken();
-                await firestore().collection('users').doc(uid).update({ pushToken: firestore.FieldValue.arrayUnion(pushToken) });
             }
-
             return user;
         }
     }
@@ -119,17 +121,21 @@ class SplashScreen extends Component {
         const today = dayjs();
         const date = today.date();
         const month = months[today.month()];
-        
-
         const quoteSnap = await firestore().collection('quotes').doc(`${month}-${date}`).get();
         const quote = quoteSnap.data();
+        const widgetData = {
+            title: quote.title,
+            meaning: quote.quote
+        }
+        await saveUserDataToSharedStorage(widgetData);
         const { loadUserData } = this.props;
         loadUserData({ quote: quote, date, month: today.month(), year: today.year() });
 
     }
 
     async componentDidMount() {
-        const authUser = await auth().signInAnonymously();
+        await auth().signInAnonymously();
+        await requestUserPermission()
         const uid = getUniqueId();
         var user = await this.checkUserSetting(uid);
         if (!user) {
@@ -144,7 +150,11 @@ class SplashScreen extends Component {
         // Get Quote of Today
         await this.getQuoteOfToday();
         this.setState({ user });
-
+        messaging()
+        .getToken()
+        .then(token => {
+           firestore().collection("users").doc(uid).update({ pushToken : firestore.FieldValue.arrayUnion(token)});
+        });
         if (user.showWelcome) {
             this.setState({ showWelcomeModal: true });
         }
@@ -156,8 +166,8 @@ class SplashScreen extends Component {
         } else {
             this.props.navigation.navigate("Main", { screen: "Home" });
         }
-
     }
+   
 
     onCloseModal = (checked) => {
 

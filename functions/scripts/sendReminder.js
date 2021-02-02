@@ -18,19 +18,26 @@ exports.sendReminder = https.onRequest ( async(request, response) => {
     const user = userSnap.data();
     const { pushToken } = user;
     const message = {
+        data : {
+            type : "reminder"
+        },
         notification : {
-            title : "CTR Daily Meaning",
-            body : "Let's check CTR daily meaning!"
+            title : "CTR Daily",
+            body : "Today's CTR meaning is Ready."
         }
     }
 
-    const result = await messaging().sendToDevice(
-        typeof pushToken == "string"?[pushToken]:[...pushToken],
-        message,
-        {
-            contentAvailable : true,
-            priority : "high"
-        }
-    )
-    response.status(200).send(JSON.stringify({ success : result}));
+    var result = "sucess";
+    if(pushToken.length > 0){
+        result = await messaging().sendToDevice(
+            typeof pushToken == "string"?[pushToken]:[...pushToken],
+            message,
+            {
+                contentAvailable : true,
+                priority : "high"
+            }
+        )
+    }
+   
+    response.status(200).send(JSON.stringify({ success : result }));
 }) 

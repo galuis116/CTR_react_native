@@ -8,6 +8,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment-timezone';
 import { load_user_data } from "../../redux/actions/UserActions";
 import firestore from "@react-native-firebase/firestore";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class ReminderScreen extends Component {
     constructor(props) {
@@ -24,8 +25,11 @@ class ReminderScreen extends Component {
         const { setReminder } = this.props;
         setReminder({ reminder : this.state.reminderTime });
 
-
-
+        const data = {
+            uid : this.props.user.uid,
+            reminder : this.state.reminderTime
+        }
+        await AsyncStorage.setItem("user_data", JSON.stringify(data));
         this.props.navigation.navigate("Main", { screen : "Home"});
     }
 

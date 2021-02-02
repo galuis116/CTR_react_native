@@ -27,7 +27,6 @@
 		28CB899825962EBA007A37EB /* DMSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 28CB899225962EBA007A37EB /* DMSans-BoldItalic.ttf */; };
 		28CB899925962EBA007A37EB /* DMSans-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 28CB899325962EBA007A37EB /* DMSans-MediumItalic.ttf */; };
 		28CB899A25962EBA007A37EB /* DMSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 28CB899425962EBA007A37EB /* DMSans-Bold.ttf */; };
-		28E117E425B0682E002DF324 /* RNBackgroundFetch+AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 28E117E325B0682E002DF324 /* RNBackgroundFetch+AppDelegate.m */; };
 		28E9FEB1259DE4B4006DA77E /* metro.config.js in Resources */ = {isa = PBXBuildFile; fileRef = 28E9FEB0259DE4B4006DA77E /* metro.config.js */; };
 		28E9FEE1259DE4C8006DA77E /* Cabin-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 28E9FEB6259DE4C6006DA77E /* Cabin-MediumItalic.ttf */; };
 		28E9FEE2259DE4C8006DA77E /* Cormorant-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 28E9FEB7259DE4C6006DA77E /* Cormorant-Medium.ttf */; };
@@ -158,7 +157,6 @@
 		28CB899325962EBA007A37EB /* DMSans-MediumItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "DMSans-MediumItalic.ttf"; path = "../assets/fonts/DMSans-MediumItalic.ttf"; sourceTree = "<group>"; };
 		28CB899425962EBA007A37EB /* DMSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "DMSans-Bold.ttf"; path = "../assets/fonts/DMSans-Bold.ttf"; sourceTree = "<group>"; };
 		28E1178025B04888002DF324 /* ctrwidgetExtensionRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ctrwidgetExtensionRelease.entitlements; sourceTree = "<group>"; };
-		28E117E325B0682E002DF324 /* RNBackgroundFetch+AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "RNBackgroundFetch+AppDelegate.m"; path = "../node_modules/react-native-background-fetch/ios/RNBackgroundFetch/RNBackgroundFetch+AppDelegate.m"; sourceTree = "<group>"; };
 		28E9FEB0259DE4B4006DA77E /* metro.config.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = metro.config.js; path = ../metro.config.js; sourceTree = "<group>"; };
 		28E9FEB6259DE4C6006DA77E /* Cabin-MediumItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Cabin-MediumItalic.ttf"; path = "../assets/fonts/Fonts/Cabin-MediumItalic.ttf"; sourceTree = "<group>"; };
 		28E9FEB7259DE4C6006DA77E /* Cormorant-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Cormorant-Medium.ttf"; path = "../assets/fonts/Fonts/Cormorant-Medium.ttf"; sourceTree = "<group>"; };
@@ -298,7 +296,6 @@
 		13B07FAE1A68108700A75B9A /* ctr */ = {
 			isa = PBXGroup;
 			children = (
-				28E117E325B0682E002DF324 /* RNBackgroundFetch+AppDelegate.m */,
 				28AB76BE25AF74BB008542B9 /* Shared */,
 				28CB38A925A7FB5C0057E227 /* ctr.entitlements */,
 				28E9FED9259DE4C8006DA77E /* Cabin-Bold.ttf */,
@@ -1023,7 +1020,6 @@
 				28AB76C725AF74D3008542B9 /* Shared.h in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				28AB76C125AF74CA008542B9 /* Shared.m in Sources */,
-				28E117E425B0682E002DF324 /* RNBackgroundFetch+AppDelegate.m in Sources */,
 				284B39FF25A5C6DC001D08E3 /* File.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
@@ -1133,7 +1129,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ctr/ctr.entitlements;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 42;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = EJRACB94M6;
 				ENABLE_BITCODE = NO;
@@ -1141,7 +1137,7 @@
 				INFOPLIST_FILE = ctr/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1164,14 +1160,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = ctr/ctr.entitlements;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 42;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = EJRACB94M6;
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = ctr/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1200,7 +1196,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_ENTITLEMENTS = ctrwidgetExtensionDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 42;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = EJRACB94M6;
@@ -1208,7 +1204,7 @@
 				INFOPLIST_FILE = ctrwidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ctrdaily.ctrdaily.ctrwidget;
@@ -1238,7 +1234,7 @@
 				CODE_SIGN_ENTITLEMENTS = ctrwidgetExtensionRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 27;
+				CURRENT_PROJECT_VERSION = 42;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = EJRACB94M6;
@@ -1246,7 +1242,7 @@
 				INFOPLIST_FILE = ctrwidget/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.3;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ctrdaily.ctrdaily.ctrwidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";

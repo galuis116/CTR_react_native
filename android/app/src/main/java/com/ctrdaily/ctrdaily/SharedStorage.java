@@ -1,5 +1,6 @@
 package com.ctrdaily.ctrdaily;
 
+import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
@@ -13,6 +14,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+
+import java.util.Objects;
 
 public class SharedStorage extends ReactContextBaseJavaModule {
     ReactApplicationContext context;
@@ -32,14 +35,25 @@ public class SharedStorage extends ReactContextBaseJavaModule {
         SharedPreferences.Editor editor = context.getSharedPreferences("DATA", Context.MODE_PRIVATE).edit();
         editor.putString("appData", message);
         editor.commit();
-
-        //CHANGE TO THE NAME OF YOUR WIDGET
-        Intent intent = new Intent(getCurrentActivity().getApplicationContext(), CtrWidget.class);
-        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        //CHANGE TO THE NAME OF YOUR WIDGET
-        int[] ids = AppWidgetManager.getInstance(getCurrentActivity().getApplicationContext()).getAppWidgetIds(new ComponentName(getCurrentActivity().getApplicationContext(), CtrWidget.class));
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-        getCurrentActivity().getApplicationContext().sendBroadcast(intent);
-
+        try{
+            Intent intent = new Intent(context, CtrWidget.class);
+            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+            int[] ids = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, CtrWidget.class));
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+            context.sendBroadcast(intent);
+        } catch (NullPointerException e){
+            System.out.println("WIDGET ERROR");
+        }
     }
+
+    @ReactMethod
+    public void get(Callback callback){
+        SharedPreferences mPref = context.getSharedPreferences("DATA", Context.MODE_PRIVATE);
+        String data = mPref.getString("appData", "empty");
+        callback.invoke(data);
+    }
+
+
+
+    
 }

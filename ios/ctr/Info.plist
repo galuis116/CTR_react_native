@@ -48,15 +48,15 @@
 		</dict>
 	</dict>
 	<key>NSDocumentsFolderUsageDescription</key>
-	<string></string>
+	<string>CTR Daily will access your document folders to save the meaning as wallpaper</string>
 	<key>NSDownloadsFolderUsageDescription</key>
-	<string></string>
+	<string>CTR Daily will access your download folder to save the meaning as wallpaper</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>CTR Daily will access your location to get your current location and timezone.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string></string>
+	<string>CTR Daily will add the meaning as wallpaper to your Photo Library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>photo</string>
+	<string>CTR Daily will access your Photo Library to save the meaning as wallpaper.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

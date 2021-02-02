@@ -88,7 +88,7 @@ class Subscription extends Component {
                     loadUserData({ membership: "premium", membership_status : "active" });
                     this.setState({ loading: false })
                     showToast("Your subscription has been restored!");
-                    this.props.navigation.goBack();
+                    this.props.navigation.navigate("Main");
                 } else {
                     await RNIap.requestSubscription(itemSkus[0]);
                 }
