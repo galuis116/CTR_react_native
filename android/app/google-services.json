@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "6406901651",
+    "project_id": "ctr-daily",
+    "storage_bucket": "ctr-daily.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:6406901651:android:a3cdda432b3d96b66a6266",
+        "android_client_info": {
+          "package_name": "com.ctrdaily.ctrdaily"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "6406901651-28d969blu6j5f7gdhst3v3i075e3jr5t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYonNeu95b3wBVNeoMz7wBGpm0pRI7k_0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "6406901651-28d969blu6j5f7gdhst3v3i075e3jr5t.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "6406901651-t8aac1cvf0gppdgjgda04pcl8k82urs0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ctrdaily.ctrdaily"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
