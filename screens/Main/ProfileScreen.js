@@ -5,6 +5,10 @@ import { ListItem } from "react-native-elements";
 import FIcon from "react-native-vector-icons/Feather";
 import LinearGradient from "react-native-linear-gradient";
 import { connect } from "react-redux";
+import FlashMessage, {
+    showMessage,
+    hideMessage,
+  } from 'react-native-flash-message';
 class ProfileScreen extends Component {
     constructor(props) {
         super(props);
@@ -27,6 +31,18 @@ class ProfileScreen extends Component {
     onPressSubscription = () => {
         this.props.navigation.navigate("Onboard", { screen : "subscription", params : { showBackButton : true }})
     }
+    async componentDidMount() {
+        showMessage({
+          message:
+            'This app is free to use for 2 weeks or up to 14 CTR viewings.',
+          type: 'default',
+          backgroundColor: '#5B86E5',
+          titleStyle: {fontStyle: 'italic', textAlign:'center'},
+          autoHide: false,
+          floating: true,
+          position: 'bottom',
+        });
+    }
 
     render() {
         const { navigation } = this.props;
@@ -48,7 +64,6 @@ class ProfileScreen extends Component {
                                 {this.props.user.membership == "premium" && "Welcome to CTR Daily Premium!"}
                                 </Text>
                             </View>
-                            {this.props.user.membership == "trial" &&  <Text style={{marginTop : 5, fontFamily : "DMSans-Bold", color : "#fff", fontSize : 12}}>Free trial for 2 weeks or after viewing 14 CTR meanings.</Text> }
                         </LinearGradient> 
                     </TouchableOpacity> 
                     <View>
@@ -102,6 +117,7 @@ class ProfileScreen extends Component {
                         </ListItem>
                     </View>
                 </SafeAreaView>
+                {this.props.user.membership == "trial" && <FlashMessage position="bottom" /> }
             </View>
         );
     }

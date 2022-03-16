@@ -15,7 +15,7 @@ class ReminderScreen extends Component {
         super(props);
         this.state = {
             showDatePickerModal : false,
-            reminderTime : "10:00"
+            reminderTime : props.user.reminder || "10:00"
         };
     }
     _onPressContinue = async () => {

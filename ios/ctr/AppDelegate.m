@@ -54,7 +54,6 @@ static void InitializeFlipper(UIApplication *application) {
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
 
-  [[TSBackgroundFetch sharedInstance] didFinishLaunching];
 
   return YES;
 }
