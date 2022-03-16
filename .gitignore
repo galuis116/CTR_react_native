@@ -110,13 +110,8 @@ android/app/.idea/*
 android/app/build/*
 ios/Pods/*
 android/*.hprof
-android/app/src/main.res/*
-android/app/release/*
-android/app/google-services.json
 android/*.keystore
-android/app/*.keystore
 android/gradle/*.jks
-android/app/src/main/assets/*
 android/build/*
 android/local.properties
 ios/lds.xcodeproj/*
