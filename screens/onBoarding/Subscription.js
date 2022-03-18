@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Platform,
   Linking,
+  Alert,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {ifIphoneX} from 'react-native-iphone-x-helper';
@@ -32,8 +33,8 @@ class Subscription extends Component {
     this.state = {
       loading: false,
     };
-    purchaseUpdateSubscription = null;
-    purchaseErrorSubscription = null;
+    this.purchaseUpdateSubscription = null;
+    this.purchaseErrorSubscription = null;
   }
 
   async componentDidMount() {
@@ -102,28 +103,60 @@ class Subscription extends Component {
       });
   }
 
+  restore = async () => {
+    try {
+      this.setState({loading: true});
+      const purchases = await RNIap.getAvailablePurchases();
+      let restoredTitles = [];
+      const {loadUserData} = this.props;
+      purchases.forEach(async (purchase) => {
+        switch (purchase.productId) {
+          case itemSkus[0]:
+            const oneYearAgo = new Date();
+            oneYearAgo.setDate(oneYearAgo.getDate() - 366);
+            const lastUpdate = new Date(purchase.transactionDate);
+            if (oneYearAgo < lastUpdate) {
+              restoredTitles.push('Premium Version');
+              await firestore()
+                .collection('users')
+                .doc(this.props.user.uid)
+                .update({
+                  membership: 'premium',
+                  membership_status: 'active',
+                });
+              const {loadUserData} = this.props;
+              loadUserData({
+                membership: 'premium',
+                membership_status: 'active',
+              });
+              this.setState({loading: false});
+              showToast('Your subscription has been restored!');
+              this.props.navigation.navigate('Main');
+            }
+
+            break;
+          default:
+            break;
+        }
+      });
+      this.setState({loading: false});
+      if (restoredTitles.length) {
+      } else {
+        Alert.alert('Restore Failed', 'You have no item to restore to!');
+      }
+    } catch (err) {
+      this.setState({loading: false});
+      console.warn(err); // standardized err.code and err.message available
+      Alert.alert(err.message);
+    }
+  };
+
   purchase = async () => {
     this.setState({loading: true});
     try {
       const products = await RNIap.getSubscriptions(itemSkus);
       if (products.length) {
-        const avaliable = await RNIap.getAvailablePurchases();
-        if (avaliable.length > 0) {
-          await firestore()
-            .collection('users')
-            .doc(this.props.user.uid)
-            .update({
-              membership: 'premium',
-              membership_status: 'active',
-            });
-          const {loadUserData} = this.props;
-          loadUserData({membership: 'premium', membership_status: 'active'});
-          this.setState({loading: false});
-          showToast('Your subscription has been restored!');
-          this.props.navigation.navigate('Main');
-        } else {
-          await RNIap.requestSubscription(itemSkus[0]);
-        }
+        await RNIap.requestSubscription(itemSkus[0]);
       }
     } catch (e) {
       console.warn('Payment Error:', e);
@@ -170,9 +203,15 @@ class Subscription extends Component {
         </View>
         <View style={{alignItems: 'center'}}>
           <Text style={styles.price}>$2.99/year.</Text>
-          <TouchableOpacity style={styles.subscribe} onPress={this.purchase}>
-            <Text style={styles.subscribeText}>Subscribe Now</Text>
-          </TouchableOpacity>
+          <View style={{flexDirection: 'row'}}>
+            <TouchableOpacity style={styles.subscribe} onPress={this.restore}>
+              <Text style={styles.subscribeText}>Restore</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.subscribe} onPress={this.purchase}>
+              <Text style={styles.subscribeText}>Subscribe Now</Text>
+            </TouchableOpacity>
+          </View>
+
           <View
             style={{
               flexDirection: 'row',
@@ -210,10 +249,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#393e46',
   },
   subscribe: {
+    marginHorizontal: 10,
     paddingVertical: 10,
     borderRadius: 30,
     backgroundColor: '#f3f3f3',
-    width: '100%',
+    width: '50%',
     alignItems: 'center',
   },
   subscribeText: {
